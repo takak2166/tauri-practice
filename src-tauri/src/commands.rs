@@ -29,4 +29,11 @@ pub fn player_discard(state: State<SharedState>, tile_id: u8) -> Result<GameStat
     Ok(game_state)
 }
 
+#[tauri::command]
+pub fn cpu_step(state: State<SharedState>) -> Result<GameState, String> {
+    let mut engine = state.engine.lock().map_err(|e| e.to_string())?;
+    let game_state = engine.cpu_step()?.clone();
+    Ok(game_state)
+}
+
 

@@ -19,7 +19,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             commands::new_game,
             commands::get_state,
-            commands::player_discard
+            commands::player_discard,
+            commands::cpu_step
         ])
         .run(generate_context!())
         .expect("error while running tauri application");

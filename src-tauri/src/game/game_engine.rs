@@ -1,5 +1,6 @@
 use crate::models::game_state::{GamePhase, GameState, Player};
 use crate::models::tile::{create_wall, shuffle_wall, sort_hand, Tile};
+use rand::Rng;
 
 pub struct GameEngine {
     wall: Vec<Tile>,
@@ -75,6 +76,65 @@ impl GameEngine {
 
         Ok(&self.state)
     }
+
+    /// CPU step: draw if in Draw phase, discard randomly if in Discard phase.
+    pub fn cpu_step(&mut self) -> Result<&GameState, String> {
+
+        // Validate it's a CPU turn
+        match self.state.current_player {
+            Player::Cpu1 | Player::Cpu2 | Player::Cpu3 => {}
+            Player::Player => return Err("Not CPU turn".into()),
+        }
+
+        match self.state.phase {
+            GamePhase::Draw => {
+                // Draw a tile
+                if let Some(tile) = self.wall.pop() {
+                    let cpu_index = match self.state.current_player {
+                        Player::Cpu1 => 1,
+                        Player::Cpu2 => 2,
+                        Player::Cpu3 => 3,
+                        Player::Player => unreachable!(),
+                    };
+                    self.state.hands[cpu_index].push(tile);
+                    sort_hand(&mut self.state.hands[cpu_index]);
+                    self.state.wall_count = self.wall.len();
+                    self.state.phase = GamePhase::Discard;
+                } else {
+                    // Wall exhausted
+                    self.state.phase = GamePhase::End;
+                    return Ok(&self.state);
+                }
+            }
+            GamePhase::Discard => {
+                // Discard a random tile
+                let cpu_index = match self.state.current_player {
+                    Player::Cpu1 => 1,
+                    Player::Cpu2 => 2,
+                    Player::Cpu3 => 3,
+                    Player::Player => unreachable!(),
+                };
+                let hand = &mut self.state.hands[cpu_index];
+                if hand.is_empty() {
+                    return Err("CPU hand is empty".into());
+                }
+
+                let mut rng = rand::thread_rng();
+                let discard_index = rng.gen_range(0..hand.len());
+                let tile = hand.remove(discard_index);
+                self.state.discards[cpu_index].push(tile);
+
+                // Advance to next player
+                self.state.current_player = self.state.current_player.next();
+                self.state.phase = GamePhase::Draw;
+            }
+            GamePhase::End => {
+                return Err("Game has ended".into());
+            }
+        }
+
+        Ok(&self.state)
+    }
 }
 
 #[cfg(test)]
@@ -124,6 +184,46 @@ mod tests {
         assert_eq!(state.hands[0].len(), before_len - 1);
         assert!(state.discards[0].iter().any(|t| t.id == 0));
         assert_eq!(state.current_player, Player::Cpu1);
+        assert_eq!(state.phase, GamePhase::Draw);
+    }
+
+    #[test]
+    fn test_cpu_step_draw() {
+        let mut engine = GameEngine::new();
+        engine.new_game();
+        engine.player_discard(0).unwrap(); // Player discards, turn goes to Cpu1
+
+        let before_wall = engine.state.wall_count;
+        let before_hand_len = engine.state.hands[1].len();
+        let res = engine.cpu_step();
+        assert!(res.is_ok());
+
+        let state = res.unwrap();
+        // Cpu1 should have drawn a tile
+        assert_eq!(state.hands[1].len(), before_hand_len + 1);
+        assert_eq!(state.wall_count, before_wall - 1);
+        assert_eq!(state.phase, GamePhase::Discard);
+        assert_eq!(state.current_player, Player::Cpu1);
+    }
+
+    #[test]
+    fn test_cpu_step_discard() {
+        let mut engine = GameEngine::new();
+        engine.new_game();
+        engine.player_discard(0).unwrap(); // Player discards, turn goes to Cpu1
+        engine.cpu_step().unwrap(); // Cpu1 draws
+
+        let before_hand_len = engine.state.hands[1].len();
+        let before_discard_len = engine.state.discards[1].len();
+        let res = engine.cpu_step();
+        assert!(res.is_ok());
+
+        let state = res.unwrap();
+        // Cpu1 should have discarded a tile
+        assert_eq!(state.hands[1].len(), before_hand_len - 1);
+        assert_eq!(state.discards[1].len(), before_discard_len + 1);
+        // Turn should advance to Cpu2
+        assert_eq!(state.current_player, Player::Cpu2);
         assert_eq!(state.phase, GamePhase::Draw);
     }
 }
