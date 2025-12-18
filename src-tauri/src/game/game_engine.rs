@@ -32,15 +32,48 @@ impl GameEngine {
             sort_hand(hand);
         }
 
+        // First draw for the starting player
+        if let Some(tile) = self.wall.pop() {
+            self.state.hands[0].push(tile);
+            sort_hand(&mut self.state.hands[0]);
+        }
+
         self.state.wall_count = self.wall.len();
         self.state.current_player = Player::Player;
-        self.state.phase = GamePhase::Draw;
+        // After initial deal and first draw, player can discard
+        self.state.phase = GamePhase::Discard;
 
         &self.state
     }
 
     pub fn get_state(&self) -> GameState {
         self.state.clone()
+    }
+
+    /// Player discards a tile; validates turn, phase, and tile existence.
+    pub fn player_discard(&mut self, tile_id: u8) -> Result<&GameState, String> {
+        // Validate turn and phase
+        if self.state.current_player != Player::Player {
+            return Err("Not player's turn".into());
+        }
+        if self.state.phase != GamePhase::Discard {
+            return Err("Not in discard phase".into());
+        }
+
+        // Remove one occurrence from player's hand
+        let hand = &mut self.state.hands[0];
+        if let Some(pos) = hand.iter().position(|t| t.id == tile_id) {
+            let tile = hand.remove(pos);
+            self.state.discards[0].push(tile);
+        } else {
+            return Err("Tile not found in hand".into());
+        }
+
+        // Advance turn to CPU1 and set phase to Draw for next actor
+        self.state.current_player = Player::Cpu1;
+        self.state.phase = GamePhase::Draw;
+
+        Ok(&self.state)
     }
 }
 
@@ -53,14 +86,15 @@ mod tests {
         let mut engine = GameEngine::new();
         let state = engine.new_game();
 
-        // 13 tiles each
-        for hand in state.hands.iter() {
-            assert_eq!(hand.len(), 13);
-        }
-        // Wall count should be 136 - 52 = 84
-        assert_eq!(state.wall_count, 84);
+        // Player has 14 tiles (13 dealt + 1 initial draw), others have 13
+        assert_eq!(state.hands[0].len(), 14);
+        assert_eq!(state.hands[1].len(), 13);
+        assert_eq!(state.hands[2].len(), 13);
+        assert_eq!(state.hands[3].len(), 13);
+        // Wall count should be 136 - 52 - 1 = 83
+        assert_eq!(state.wall_count, 83);
         // Phase and current player set
-        assert_eq!(state.phase, GamePhase::Draw);
+        assert_eq!(state.phase, GamePhase::Discard);
         assert_eq!(state.current_player, Player::Player);
     }
 
@@ -70,6 +104,27 @@ mod tests {
         engine.new_game();
         let state = engine.get_state();
         assert_eq!(state.hands.len(), 4);
+    }
+
+    #[test]
+    fn test_player_discard() {
+        let mut engine = GameEngine::new();
+        engine.new_game();
+
+        // Ensure player has tile 0 after new_game
+        let had_tile0 = engine.state.hands[0].iter().any(|t| t.id == 0);
+        if !had_tile0 {
+            engine.state.hands[0].push(Tile::new(0).unwrap());
+        }
+        let before_len = engine.state.hands[0].len();
+        let res = engine.player_discard(0);
+        assert!(res.is_ok());
+
+        let state = res.unwrap();
+        assert_eq!(state.hands[0].len(), before_len - 1);
+        assert!(state.discards[0].iter().any(|t| t.id == 0));
+        assert_eq!(state.current_player, Player::Cpu1);
+        assert_eq!(state.phase, GamePhase::Draw);
     }
 }
 
