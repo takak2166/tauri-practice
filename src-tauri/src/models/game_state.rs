@@ -38,6 +38,10 @@ pub struct GameState {
     pub wall_count: usize,
     pub current_player: Player,
     pub phase: GamePhase,
+    /// Can win by tsumo (draw)
+    pub can_tsumo: bool,
+    /// Can win by ron (claim discarded tile)
+    pub can_ron: bool,
 }
 
 impl GameState {
@@ -49,6 +53,8 @@ impl GameState {
             wall_count: 136,
             current_player: Player::Player,
             phase: GamePhase::Draw,
+            can_tsumo: false,
+            can_ron: false,
         }
     }
 }

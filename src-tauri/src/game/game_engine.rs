@@ -1,5 +1,6 @@
 use crate::models::game_state::{GamePhase, GameState, Player};
 use crate::models::tile::{create_wall, shuffle_wall, sort_hand, Tile};
+use crate::game::win_checker::{can_win, can_win_by_ron};
 use rand::Rng;
 
 pub struct GameEngine {
@@ -43,6 +44,9 @@ impl GameEngine {
         self.state.current_player = Player::Player;
         // After initial deal and first draw, player can discard
         self.state.phase = GamePhase::Discard;
+        
+        // Update win flags
+        self.update_win_flags();
 
         &self.state
     }
@@ -73,6 +77,9 @@ impl GameEngine {
         // Advance turn to CPU1 and set phase to Draw for next actor
         self.state.current_player = Player::Cpu1;
         self.state.phase = GamePhase::Draw;
+        
+        // Update win flags (check if CPU1 can ron the discarded tile)
+        self.update_win_flags();
 
         Ok(&self.state)
     }
@@ -100,6 +107,9 @@ impl GameEngine {
                     sort_hand(&mut self.state.hands[cpu_index]);
                     self.state.wall_count = self.wall.len();
                     self.state.phase = GamePhase::Discard;
+                    
+                    // Update win flags (check if CPU can tsumo)
+                    self.update_win_flags();
                 } else {
                     // Wall exhausted
                     self.state.phase = GamePhase::End;
@@ -127,6 +137,9 @@ impl GameEngine {
                 // Advance to next player
                 self.state.current_player = self.state.current_player.next();
                 self.state.phase = GamePhase::Draw;
+                
+                // Update win flags (check if next player can ron the discarded tile)
+                self.update_win_flags();
             }
             GamePhase::End => {
                 return Err("Game has ended".into());
@@ -134,6 +147,53 @@ impl GameEngine {
         }
 
         Ok(&self.state)
+    }
+
+    /// Update win flags (can_tsumo and can_ron) for all players
+    fn update_win_flags(&mut self) {
+        // Reset flags
+        self.state.can_tsumo = false;
+        self.state.can_ron = false;
+
+        // Check tsumo for current player (if in Discard phase after drawing, hand has 14 tiles)
+        if self.state.phase == GamePhase::Discard {
+            let current_index = match self.state.current_player {
+                Player::Player => 0,
+                Player::Cpu1 => 1,
+                Player::Cpu2 => 2,
+                Player::Cpu3 => 3,
+            };
+            if can_win(&self.state.hands[current_index]) {
+                self.state.can_tsumo = true;
+            }
+        }
+
+        // Check ron for other players (if last discarded tile can complete their hand)
+        // Find the last discarded tile
+        let last_discarded = self.state.discards.iter()
+            .flat_map(|discards| discards.last())
+            .last()
+            .copied();
+
+        if let Some(discarded_tile) = last_discarded {
+            for (index, hand) in self.state.hands.iter().enumerate() {
+                let player = match index {
+                    0 => Player::Player,
+                    1 => Player::Cpu1,
+                    2 => Player::Cpu2,
+                    3 => Player::Cpu3,
+                    _ => continue,
+                };
+                // Don't check ron for the player who just discarded
+                if player == self.state.current_player {
+                    continue;
+                }
+                if can_win_by_ron(hand, discarded_tile) {
+                    self.state.can_ron = true;
+                    break;
+                }
+            }
+        }
     }
 }
 
@@ -191,7 +251,10 @@ mod tests {
     fn test_cpu_step_draw() {
         let mut engine = GameEngine::new();
         engine.new_game();
-        engine.player_discard(0).unwrap(); // Player discards, turn goes to Cpu1
+        
+        // Ensure player has a tile to discard
+        let tile_id = engine.state.hands[0][0].id;
+        engine.player_discard(tile_id).unwrap(); // Player discards, turn goes to Cpu1
 
         let before_wall = engine.state.wall_count;
         let before_hand_len = engine.state.hands[1].len();
@@ -210,7 +273,10 @@ mod tests {
     fn test_cpu_step_discard() {
         let mut engine = GameEngine::new();
         engine.new_game();
-        engine.player_discard(0).unwrap(); // Player discards, turn goes to Cpu1
+        
+        // Ensure player has a tile to discard
+        let tile_id = engine.state.hands[0][0].id;
+        engine.player_discard(tile_id).unwrap(); // Player discards, turn goes to Cpu1
         engine.cpu_step().unwrap(); // Cpu1 draws
 
         let before_hand_len = engine.state.hands[1].len();
