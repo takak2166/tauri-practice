@@ -27,6 +27,26 @@ export function App() {
     }
   };
 
+  const handleDiscard = async (tile: { id: number }) => {
+    try {
+      const state = await invoke<GameState>("player_discard", { tileId: tile.id });
+      setGameState(state);
+    } catch (error) {
+      console.error("Failed to discard tile:", error);
+      alert(`Failed to discard: ${error}`);
+    }
+  };
+
+  const handleTsumo = async () => {
+    // TODO: Implement tsumo command
+    alert("Tsumo win! (Not yet implemented)");
+  };
+
+  const handleRon = async () => {
+    // TODO: Implement ron command
+    alert("Ron win! (Not yet implemented)");
+  };
+
   useEffect(() => {
     loadGameState();
   }, []);
@@ -55,7 +75,36 @@ export function App() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Player Hand */}
           <div className="bg-white p-4 rounded-lg shadow">
-            <HandDisplay tiles={gameState.hands[0]} title="Your Hand" />
+            <HandDisplay
+              tiles={gameState.hands[0]}
+              title="Your Hand"
+              clickable={
+                gameState.current_player === "Player" &&
+                gameState.phase === "Discard"
+              }
+              onTileClick={handleDiscard}
+            />
+            {/* Win buttons */}
+            {gameState.current_player === "Player" && gameState.phase === "Discard" && (
+              <div className="mt-4 flex gap-2">
+                {gameState.can_tsumo && (
+                  <button
+                    onClick={handleTsumo}
+                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                  >
+                    Tsumo
+                  </button>
+                )}
+                {gameState.can_ron && (
+                  <button
+                    onClick={handleRon}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                  >
+                    Ron
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Player Discards */}
