@@ -1,0 +1,420 @@
+/* 3D Tile Styles */
+.tile-3d-container {
+  perspective: 1000px;
+  display: inline-block;
+  width: var(--tile-w);
+  height: var(--tile-h);
+  flex-shrink: 0;
+}
+
+/* Override Tailwind size classes to use CSS variables */
+.tile-3d-container.w-8,
+.tile-3d-container.w-12,
+.tile-3d-container.w-16 {
+  width: var(--tile-w);
+}
+
+.tile-3d-container.h-12,
+.tile-3d-container.h-16,
+.tile-3d-container.h-20 {
+  height: var(--tile-h);
+}
+
+.tile-3d {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateY(-15deg) rotateX(5deg);
+  transition: transform 0.2s ease;
+}
+
+.tile-3d:hover {
+  transform: rotateY(-10deg) rotateX(2deg) translateZ(5px);
+}
+
+.tile-face {
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+/* Front face */
+.tile-front {
+  width: 100%;
+  height: 100%;
+  transform: translateZ(var(--depth));
+}
+
+.tile-surface {
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 2px 8px var(--tile-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Manzu (萬子) */
+.tile-manzu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-weight: 700;
+  font-family: "Klee One", sans-serif;
+}
+
+.tile-manzu .tile-number {
+  font-size: 1.2em;
+  margin-bottom: 2px;
+  font-weight: 700;
+}
+
+.tile-number-black {
+  color: var(--tile-number-black);
+}
+
+.tile-suit-red {
+  color: var(--tile-suit-red);
+}
+
+/* Pinzu (筒子) */
+.tile-pinzu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  padding: 4px;
+}
+
+/* 1-Pin: Special design */
+.tile-pinzu-special-one {
+  position: relative;
+  width: 60%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pinzu-one-outer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--tile-pinzu-blue);
+  border: 2px solid var(--tile-pinzu-blue-dark);
+}
+
+.pinzu-one-inner {
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  background: var(--tile-suit-red);
+  border: 1px solid var(--tile-pinzu-red-dark);
+}
+
+.pinzu-one-center {
+  position: absolute;
+  width: 40%;
+  height: 40%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    var(--tile-pinzu-blue) 0deg 45deg,
+    var(--tile-suit-red) 45deg 90deg
+  );
+}
+
+/* 2-9 Pin: Grid layout */
+.tile-pinzu-grid {
+  display: grid;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Reduce vertical margin for top half of 7-Pin grid (use negative margin to bring closer) */
+.tile-pinzu-top.tile-pinzu-grid {
+  row-gap: 0px;
+  column-gap: 3px;
+  padding: 2px 0;
+}
+
+.tile-pinzu-top .tile-pinzu-circle {
+  margin-top: -2px;
+  margin-bottom: -2px;
+}
+
+/* 7-Pin: Split into top and bottom halves */
+.tile-pinzu-seven-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 1px;
+  justify-content: space-between;
+}
+
+.tile-pinzu-top {
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 35%;
+  max-height: 40%;
+}
+
+.tile-pinzu-bottom {
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 50%;
+  max-width: 70%;
+  margin: 0 auto;
+}
+
+.tile-pinzu-circle {
+  border-radius: 50%;
+  border: 1px solid var(--tile-border-gray);
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Circle size based on tile size */
+.tile-surface[data-size="small"] .tile-pinzu-circle {
+  width: 6px;
+  height: 6px;
+}
+
+.tile-surface[data-size="medium"] .tile-pinzu-circle {
+  width: 10px;
+  height: 10px;
+}
+
+.tile-surface[data-size="large"] .tile-pinzu-circle {
+  width: 14px;
+  height: 14px;
+}
+
+.tile-pinzu-circle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  background: white;
+}
+
+.tile-pinzu-red {
+  background: var(--tile-suit-red);
+}
+
+.tile-pinzu-blue {
+  background: var(--tile-pinzu-blue);
+}
+
+/* Center circle of 5-Pin is larger */
+.tile-surface[data-size="small"] .tile-pinzu-grid .tile-pinzu-circle[style*="grid-row: 2"][style*="grid-column: 2"] {
+  width: 8px;
+  height: 8px;
+}
+
+.tile-surface[data-size="medium"] .tile-pinzu-grid .tile-pinzu-circle[style*="grid-row: 2"][style*="grid-column: 2"] {
+  width: 14px;
+  height: 14px;
+}
+
+.tile-surface[data-size="large"] .tile-pinzu-grid .tile-pinzu-circle[style*="grid-row: 2"][style*="grid-column: 2"] {
+  width: 18px;
+  height: 18px;
+}
+
+/* Souzu (索子) */
+.tile-souzu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: 2px;
+}
+
+/* 1-Sou: Peacock design */
+.tile-souzu-peacock {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.peacock-body {
+  width: 32%;
+  height: 40%;
+  background: var(--tile-souzu-green);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  position: absolute;
+  top: 30%;
+  left: 34%;
+}
+
+.peacock-head {
+  width: 16%;
+  height: 18%;
+  background: var(--tile-souzu-green);
+  border-radius: 50%;
+  position: absolute;
+  top: 18%;
+  left: 30%;
+}
+
+.peacock-beak {
+  width: 5%;
+  height: 4%;
+  background: var(--tile-suit-red);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  position: absolute;
+  top: 20%;
+  left: 24%;
+}
+
+.peacock-feet {
+  width: 8%;
+  height: 5%;
+  background: var(--tile-suit-red);
+  clip-path: polygon(0 0, 30% 100%, 70% 100%, 100% 0);
+  position: absolute;
+  top: 70%;
+  left: 46%;
+}
+
+.peacock-tail {
+  width: 40%;
+  height: 45%;
+  position: absolute;
+  top: 28%;
+  right: 10%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2px;
+  padding: 1px;
+}
+
+.peacock-tail::before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--tile-souzu-green);
+  border-radius: 50%;
+  top: 8%;
+  left: 8%;
+}
+
+.peacock-tail::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--tile-souzu-green);
+  border-radius: 50%;
+  top: 8%;
+  right: 8%;
+}
+
+/* 2-9 Sou: Bamboo stick design */
+.tile-souzu-sticks {
+  display: grid;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+.tile-souzu-stick {
+  background: var(--tile-souzu-green);
+  border-radius: 1.5px;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Bamboo stick size based on tile size */
+.tile-surface[data-size="small"] .tile-souzu-stick {
+  width: 2px;
+  height: 10px;
+}
+
+.tile-surface[data-size="medium"] .tile-souzu-stick {
+  width: 3px;
+  height: 14px;
+}
+
+.tile-surface[data-size="large"] .tile-souzu-stick {
+  width: 4px;
+  height: 18px;
+}
+
+.tile-souzu-stick-red {
+  background: var(--tile-suit-red);
+}
+
+/* Honor tiles (字牌) */
+.tile-honor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 1.3em;
+  font-weight: 700;
+  border-radius: 4px;
+  width: 100%;
+  font-family: "Klee One", sans-serif;
+}
+
+/* Top face */
+.tile-top {
+  width: 100%;
+  height: var(--depth);
+  background: linear-gradient(to bottom, var(--tile-top-gradient-start), var(--tile-top-gradient-end));
+  transform: rotateX(90deg) translateZ(var(--depth));
+  transform-origin: top;
+  border-radius: 2px 2px 0 0;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.depth-8 {
+  --depth: var(--tile-depth-small);
+}
+
+.depth-12 {
+  --depth: var(--tile-depth-medium);
+}
+
+.depth-16 {
+  --depth: var(--tile-depth-large);
+}
+
+/* Right side face */
+.tile-right {
+  width: var(--depth);
+  height: 100%;
+  background: linear-gradient(to right, var(--tile-right-gradient-start), var(--tile-right-gradient-end));
+  transform: rotateY(90deg) translateZ(0);
+  transform-origin: left;
+  border-radius: 0 2px 2px 0;
+  box-shadow: inset -1px 0 2px rgba(0, 0, 0, 0.1);
+}
+

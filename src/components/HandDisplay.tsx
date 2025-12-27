@@ -12,7 +12,7 @@ export function HandDisplay({ tiles, title, onTileClick, clickable = false }: Ha
   return (
     <div className="mb-4">
       {title && <h3 className="text-sm font-semibold mb-2">{title}</h3>}
-      <div className="flex flex-wrap gap-1">
+      <div className="hand-display-container">
         {tiles.map((tile, index) => (
           <div
             key={`${tile.id}-${index}`}

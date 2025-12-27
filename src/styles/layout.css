@@ -1,0 +1,225 @@
+/* Mahjong table layout */
+/* 3×3 Grid: Outer edges are auto (depends on hand size), center is 1fr (fills remaining space) */
+.mahjong-table {
+  display: grid;
+  /* Rows: Top and bottom depend on hand height (auto), center fills remaining (1fr) */
+  grid-template-rows: auto 1fr auto;
+  /* Columns: Left and right are rotated hand height (becomes width), center fills remaining (1fr) */
+  /* Left and right columns ensure rotated hand height while allowing expansion based on content */
+  grid-template-columns: auto 1fr auto;
+  gap: 0;
+  width: 100%;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+  /* Place game info in center, players around it */
+  grid-template-areas:
+    ". top ."
+    "left center right"
+    ". bottom .";
+  /* Allow grid items to overflow and be visible */
+  overflow: visible;
+}
+
+.player-row-middle {
+  display: contents;
+}
+
+.player-top {
+  grid-area: top;
+  overflow: visible;
+  /* Ensure top player area is visible */
+  min-height: var(--tile-h);
+}
+
+.player-left {
+  grid-area: left;
+  display: flex;
+  align-items: center;
+}
+
+.player-right {
+  grid-area: right;
+  display: flex;
+  align-items: center;
+}
+
+.player-bottom {
+  grid-area: bottom;
+}
+
+.game-center {
+  grid-area: center;
+}
+
+/* Hand tiles always displayed in single row, no wrapping, scale down if needed */
+.hand-display-container {
+  display: flex;
+  gap: 2px;
+  flex-wrap: nowrap;
+  width: 100%;
+  min-width: var(--hand-min-width);
+  max-width: 100%;
+  overflow: hidden;
+  /* Scale down if hand exceeds screen width */
+  transform-origin: center;
+}
+
+/* Scaling when hand exceeds screen width */
+.hand-display-container.scale-down {
+  transform: scale(calc(100% / var(--hand-min-width)));
+  transform-origin: left center;
+}
+
+/* Ensure width for discard display */
+.discard-display-container {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  width: 100%;
+  min-width: fit-content;
+}
+
+.player-area {
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Top and bottom players: Ensure width for 14 tiles */
+.player-top .player-area,
+.player-bottom .player-area {
+  min-width: var(--hand-min-width);
+  min-height: var(--tile-h);
+  overflow: visible;
+}
+
+/* Left and right players: After rotation, hand height becomes width */
+.player-left .player-area,
+.player-right .player-area {
+  width: 100%;
+  height: 100%;
+  min-height: var(--hand-min-height);
+  overflow: visible;
+  /* Width is limited by grid column width (var(--hand-min-height)) */
+}
+
+.player-top {
+  justify-content: center;
+  overflow: visible;
+  /* Position CPU2 inward */
+  padding-top: 0;
+  /* Top and bottom players ensure hand height */
+  min-height: var(--tile-h);
+}
+
+.player-left {
+  align-items: flex-start;
+  flex-direction: row;
+  overflow: visible;
+  width: auto;
+  height: 100%;
+  justify-content: flex-start;
+  /* Limited by grid column width (var(--hand-min-height)) but content remains visible */
+  min-width: var(--tile-h);
+}
+
+.player-right {
+  align-items: flex-end;
+  flex-direction: row;
+  overflow: visible;
+  width: auto;
+  height: 100%;
+  justify-content: flex-start;
+  /* Limited by grid column width (var(--hand-min-height)) but content remains visible */
+  min-width: var(--tile-h);
+}
+
+/* Player area rotation */
+.player-area-rotated {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Top and bottom players: Ensure width for 14 tiles */
+.player-top .player-area-rotated,
+.player-bottom .player-area-rotated {
+  width: 100%;
+  height: 100%;
+  min-width: var(--hand-min-width);
+  overflow: visible;
+}
+
+/* Left and right players: After rotation, ensure height for 14 tiles */
+.player-left .player-area-rotated,
+.player-right .player-area-rotated {
+  width: auto;
+  height: 100%;
+  min-height: var(--hand-min-height);
+  /* After rotation, width is determined by content */
+  overflow: visible;
+}
+
+/* For 90deg/270deg rotation, width and height need to be swapped */
+.player-rotate-90,
+.player-rotate-270 {
+  transform-origin: center;
+  width: 100%;
+  height: 100%;
+}
+
+.player-rotate-90 {
+  transform: translateX(var(--player-rotate-90-translate-x)) rotate(90deg);
+  /* Move CPU3 outward while maintaining 90deg rotation */
+  /* Apply translation before rotation to move in correct direction */
+  /* Adjust translateY() value to adjust Y coordinate */
+}
+
+.player-rotate-180 {
+  transform: translateY(var(--player-rotate-180-translate-y)) rotate(180deg);
+  /* Move CPU2 inward while maintaining 180deg rotation */
+  /* Apply translation before rotation to move in correct direction */
+  transform-origin: center;
+  width: 100%;
+  height: 100%;
+}
+
+.player-rotate-270 {
+  transform: translateX(var(--player-rotate-270-translate-x)) rotate(270deg);
+  /* Move CPU1 outward while maintaining 270deg rotation */
+  /* Apply translation before rotation to move in correct direction */
+  /* Adjust translateY() value to adjust Y coordinate */
+}
+
+.player-bottom {
+  justify-content: flex-end;
+  overflow: visible;
+  /* Top and bottom players ensure hand height */
+  min-height: var(--tile-h);
+  /* Move Player outward */
+  transform: translateY(var(--player-bottom-translate-y));
+}
+
+.game-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--game-center-min-width);
+  padding: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .player-row-middle {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+}
+

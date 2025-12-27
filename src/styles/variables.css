@@ -1,0 +1,38 @@
+:root {
+  /* Tile size variables */
+  --tile-w: clamp(20px, 3vw, 48px);
+  --tile-h: calc(var(--tile-w) * 1.333); /* 4:3 aspect ratio */
+  /* Calculate minimum width for 14 tiles in hand */
+  --hand-min-width: calc(14 * var(--tile-w) + 13 * 2px);
+  --hand-min-height: calc(14 * var(--tile-h) + 13 * 2px);
+
+  /* Color variables */
+  --mahjong-table-bg: #2d5016; /* Dull green background like mahjong table */
+  --tile-number-black: #1a1a1a;
+  --tile-suit-red: #c41e3a;
+  --tile-pinzu-blue: #2563eb;
+  --tile-pinzu-blue-dark: #1e40af;
+  --tile-pinzu-red-dark: #a01e2e;
+  --tile-souzu-green: #1a7f3a;
+  --tile-shadow: rgba(0, 0, 0, 0.3);
+  --tile-border-gray: #333;
+  --tile-top-gradient-start: #f5f5f5;
+  --tile-top-gradient-end: #e5e5e5;
+  --tile-right-gradient-start: #e0e0e0;
+  --tile-right-gradient-end: #d0d0d0;
+
+  /* Player rotation translation values */
+  --player-rotate-90-translate-x: -20rem;
+  --player-rotate-180-translate-y: 7rem;
+  --player-rotate-270-translate-x: 10rem;
+  --player-bottom-translate-y: -2rem;
+
+  /* Tile depth values */
+  --tile-depth-small: 8px;
+  --tile-depth-medium: 12px;
+  --tile-depth-large: 16px;
+
+  /* Game center */
+  --game-center-min-width: 200px;
+}
+
