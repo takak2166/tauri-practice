@@ -215,7 +215,7 @@ impl GameEngine {
                 }
             }
             GamePhase::Discard => {
-                // Discard a random tile (prefer drawn tile, otherwise random from hand)
+                // Discard a random tile from hand (including drawn_tile if present)
                 let cpu_index = match self.state.current_player {
                     Player::Cpu1 => 1,
                     Player::Cpu2 => 2,
@@ -223,22 +223,24 @@ impl GameEngine {
                     Player::Player => unreachable!(),
                 };
                 
-                let discarded_tile = if let Some(drawn) = self.state.drawn_tile[cpu_index] {
-                    // Discard the drawn tile
+                // Add drawn_tile to hand if present, then discard randomly
+                let hand = &mut self.state.hands[cpu_index];
+                if let Some(drawn) = self.state.drawn_tile[cpu_index] {
+                    hand.push(drawn);
                     self.state.drawn_tile[cpu_index] = None;
-                    // Sort hand after discarding drawn tile
-                    sort_hand(&mut self.state.hands[cpu_index]);
-                    drawn
-                } else {
-                    // Discard random tile from hand
-                    let hand = &mut self.state.hands[cpu_index];
-                    if hand.is_empty() {
-                        return Err("CPU hand is empty".into());
-                    }
-                    let mut rng = rand::thread_rng();
-                    let discard_index = rng.gen_range(0..hand.len());
-                    hand.remove(discard_index)
-                };
+                }
+                
+                if hand.is_empty() {
+                    return Err("CPU hand is empty".into());
+                }
+                
+                // Discard a random tile from hand
+                let mut rng = rand::thread_rng();
+                let discard_index = rng.gen_range(0..hand.len());
+                let discarded_tile = hand.remove(discard_index);
+                
+                // Sort hand after discarding
+                sort_hand(hand);
                 
                 self.state.discards[cpu_index].push(discarded_tile);
 

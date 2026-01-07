@@ -3,9 +3,10 @@ import { Tile } from "../types";
 interface TileDisplayProps {
   tile: Tile;
   size?: "small" | "medium" | "large";
+  hidden?: boolean; // If true, show tile back (face down)
 }
 
-export function TileDisplay({ tile, size = "medium" }: TileDisplayProps) {
+export function TileDisplay({ tile, size = "medium", hidden = false }: TileDisplayProps) {
   // Minimize classes since size is managed by CSS variables
   const sizeClass = {
     small: "text-xs",
@@ -414,13 +415,19 @@ export function TileDisplay({ tile, size = "medium" }: TileDisplayProps) {
   const sizeDataAttr = size || "medium";
   
   return (
-    <div className={`tile-3d-container ${sizeClass}`} title={`Tile ID: ${tile.id}`} data-size={sizeDataAttr}>
+    <div className={`tile-3d-container ${sizeClass}`} title={hidden ? "Hidden tile" : `Tile ID: ${tile.id}`} data-size={sizeDataAttr}>
       <div className={`tile-3d ${sizeClass} ${depthClass}`}>
         {/* Front face */}
         <div className="tile-face tile-front">
-          <div className={`tile-surface border border-gray-400 rounded bg-white flex items-center justify-center`} data-size={sizeDataAttr}>
-            {renderTileContent()}
-          </div>
+          {hidden ? (
+            <div className={`tile-surface border border-gray-400 rounded bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center tile-back`} data-size={sizeDataAttr}>
+              <div className="tile-back-pattern"></div>
+            </div>
+          ) : (
+            <div className={`tile-surface border border-gray-400 rounded bg-white flex items-center justify-center`} data-size={sizeDataAttr}>
+              {renderTileContent()}
+            </div>
+          )}
         </div>
         {/* Top face */}
         <div className="tile-face tile-top"></div>

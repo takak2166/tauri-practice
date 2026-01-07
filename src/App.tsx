@@ -66,6 +66,7 @@ export function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [debugOpen, setDebugOpen] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
+  const [hideCpuTiles, setHideCpuTiles] = useState(true); // Hide CPU tiles by default
   const isProcessingRef = useRef(false);
 
   const loadGameState = async () => {
@@ -259,7 +260,7 @@ export function App() {
                 <DiscardDisplay tiles={gameState.discards[2]} title="CPU2 Discards" />
               </div>
               <div className="p-1 rounded-lg">
-                <HandDisplay tiles={gameState.hands[2]} title="CPU2" />
+                <HandDisplay tiles={gameState.hands[2]} drawnTile={gameState.drawn_tile[2]} title="CPU2" hidden={hideCpuTiles} />
               </div>
             </div>
           </div>
@@ -271,7 +272,7 @@ export function App() {
                 <DiscardDisplay tiles={gameState.discards[3]} title="CPU3 Discards" />
               </div>
               <div className="p-1 rounded-lg">
-                <HandDisplay tiles={gameState.hands[3]} title="CPU3" />
+                <HandDisplay tiles={gameState.hands[3]} drawnTile={gameState.drawn_tile[3]} title="CPU3" hidden={hideCpuTiles} />
               </div>
             </div>
           </div>
@@ -289,7 +290,7 @@ export function App() {
                 <p className="text-sm mb-4">
                   <strong>Wall Count:</strong> {gameState.wall_count}
                 </p>
-                <div className="flex gap-2 justify-center">
+                <div className="flex gap-2 justify-center mb-2">
                   <button
                     onClick={startNewGame}
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-sm"
@@ -303,6 +304,17 @@ export function App() {
                     Refresh
                   </button>
                 </div>
+                <div className="flex gap-2 justify-center items-center">
+                  <label className="text-sm flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={hideCpuTiles}
+                      onChange={(e) => setHideCpuTiles(e.currentTarget.checked)}
+                      className="w-4 h-4"
+                    />
+                    <span>Hide CPU Tiles</span>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
@@ -314,7 +326,7 @@ export function App() {
                 <DiscardDisplay tiles={gameState.discards[1]} title="CPU1 Discards" />
               </div>
               <div className="p-1 rounded-lg">
-                <HandDisplay tiles={gameState.hands[1]} title="CPU1" />
+                <HandDisplay tiles={gameState.hands[1]} drawnTile={gameState.drawn_tile[1]} title="CPU1" hidden={hideCpuTiles} />
               </div>
             </div>
           </div>

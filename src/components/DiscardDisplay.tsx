@@ -4,15 +4,16 @@ import { TileDisplay } from "./TileDisplay";
 interface DiscardDisplayProps {
   tiles: Tile[];
   title?: string;
+  hidden?: boolean; // If true, show tiles face down (for CPU)
 }
 
-export function DiscardDisplay({ tiles, title }: DiscardDisplayProps) {
+export function DiscardDisplay({ tiles, title, hidden = false }: DiscardDisplayProps) {
   return (
     <div className="mb-4">
       {title && <h3 className="text-sm font-semibold mb-2">{title}</h3>}
       <div className="discard-display-container">
         {tiles.map((tile, index) => (
-          <TileDisplay key={`${tile.id}-${index}`} tile={tile} size="small" />
+          <TileDisplay key={`${tile.id}-${index}`} tile={tile} size="small" hidden={hidden} />
         ))}
       </div>
     </div>
