@@ -7,6 +7,12 @@
   flex-shrink: 0;
 }
 
+/* Discard tile size (80% of hand tile) */
+.tile-3d-container[data-size="small"] {
+  width: var(--discard-tile-w);
+  height: var(--discard-tile-h);
+}
+
 /* Override Tailwind size classes to use CSS variables */
 .tile-3d-container.w-8,
 .tile-3d-container.w-12,

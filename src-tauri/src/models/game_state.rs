@@ -6,6 +6,7 @@ use super::tile::Tile;
 pub enum GamePhase {
     Draw,    // Draw a tile
     Discard, // Discard a tile
+    Ron,     // Ron phase (player can choose to ron or pass)
     End,     // Game over
 }
 
@@ -38,10 +39,14 @@ pub struct GameState {
     pub wall_count: usize,
     pub current_player: Player,
     pub phase: GamePhase,
-    /// Can win by tsumo (draw)
-    pub can_tsumo: bool,
-    /// Can win by ron (claim discarded tile)
-    pub can_ron: bool,
+    /// Can win by tsumo (draw) for each player [Player, Cpu1, Cpu2, Cpu3]
+    pub can_tsumo: [bool; 4],
+    /// Can win by ron (claim discarded tile) for each player [Player, Cpu1, Cpu2, Cpu3]
+    pub can_ron: [bool; 4],
+    /// Drawn tile for each player [Player, Cpu1, Cpu2, Cpu3]
+    pub drawn_tile: [Option<Tile>; 4],
+    /// Last player who discarded a tile (for ron phase handling)
+    pub last_discarder: Option<Player>,
 }
 
 impl GameState {
@@ -53,8 +58,10 @@ impl GameState {
             wall_count: 136,
             current_player: Player::Player,
             phase: GamePhase::Draw,
-            can_tsumo: false,
-            can_ron: false,
+            can_tsumo: [false; 4],
+            can_ron: [false; 4],
+            drawn_tile: [None; 4],
+            last_discarder: None,
         }
     }
 }

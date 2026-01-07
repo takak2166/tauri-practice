@@ -19,7 +19,10 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             commands::new_game,
             commands::get_state,
+            commands::player_draw,
             commands::player_discard,
+            commands::player_ron,
+            commands::player_pass,
             commands::cpu_step
         ])
         .run(generate_context!())

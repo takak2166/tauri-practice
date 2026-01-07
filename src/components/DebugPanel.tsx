@@ -40,10 +40,10 @@ export function DebugPanel({ gameState, isOpen, onToggle }: DebugPanelProps) {
           <strong>Wall Count:</strong> {gameState.wall_count}
         </div>
         <div>
-          <strong>Can Tsumo:</strong> {gameState.can_tsumo ? "Yes" : "No"}
+          <strong>Can Tsumo:</strong> {gameState.can_tsumo.map((v, i) => `${i}:${v ? "Yes" : "No"}`).join(", ")}
         </div>
         <div>
-          <strong>Can Ron:</strong> {gameState.can_ron ? "Yes" : "No"}
+          <strong>Can Ron:</strong> {gameState.can_ron.map((v, i) => `${i}:${v ? "Yes" : "No"}`).join(", ")}
         </div>
         <div className="mt-4">
           <strong>Hand Sizes:</strong>

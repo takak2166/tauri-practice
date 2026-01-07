@@ -2,9 +2,14 @@
   /* Tile size variables */
   --tile-w: clamp(20px, 3vw, 48px);
   --tile-h: calc(var(--tile-w) * 1.333); /* 4:3 aspect ratio */
+  /* Discard tile size (80% of hand tile) */
+  --discard-tile-w: calc(var(--tile-w) * 0.8);
+  --discard-tile-h: calc(var(--discard-tile-w) * 1.333); /* 4:3 aspect ratio */
   /* Calculate minimum width for 14 tiles in hand */
   --hand-min-width: calc(14 * var(--tile-w) + 13 * 2px);
   --hand-min-height: calc(14 * var(--tile-h) + 13 * 2px);
+  /* Discard area minimum height (to prevent layout shift) */
+  --discard-min-height: calc(var(--discard-tile-h) * 2 + 2px); /* 2 rows of tiles + gap */
 
   /* Color variables */
   --mahjong-table-bg: #2d5016; /* Dull green background like mahjong table */
@@ -22,9 +27,9 @@
   --tile-right-gradient-end: #d0d0d0;
 
   /* Player rotation translation values */
-  --player-rotate-90-translate-x: -20rem;
-  --player-rotate-180-translate-y: 7rem;
-  --player-rotate-270-translate-x: 10rem;
+  --player-rotate-90-translate-x: -18rem;
+  --player-rotate-180-translate-y: 12rem;
+  --player-rotate-270-translate-x: 6rem;
   --player-bottom-translate-y: -2rem;
 
   /* Tile depth values */
