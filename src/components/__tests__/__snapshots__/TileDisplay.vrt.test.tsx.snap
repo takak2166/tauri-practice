@@ -1,0 +1,302 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TileDisplay VRT > hidden tile structure 1`] = `
+<div
+  class="tile-3d-container text-sm"
+  data-size="medium"
+  title="Hidden tile"
+>
+  <div
+    class="tile-3d text-sm depth-12"
+  >
+    <div
+      class="tile-face tile-front"
+    >
+      <div
+        class="tile-surface border border-gray-400 rounded bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center tile-back"
+        data-size="medium"
+      >
+        <div
+          class="tile-back-pattern"
+        />
+      </div>
+    </div>
+    <div
+      class="tile-face tile-top"
+    />
+    <div
+      class="tile-face tile-right"
+    />
+  </div>
+</div>
+`;
+
+exports[`TileDisplay VRT > honor tile East (東) structure 1`] = `
+<div
+  class="tile-3d-container text-sm"
+  data-size="medium"
+  title="Tile ID: 27"
+>
+  <div
+    class="tile-3d text-sm depth-12"
+  >
+    <div
+      class="tile-face tile-front"
+    >
+      <div
+        class="tile-surface border border-gray-400 rounded bg-white flex items-center justify-center"
+        data-size="medium"
+      >
+        <div
+          class="tile-honor bg-white text-black"
+        >
+          東
+        </div>
+      </div>
+    </div>
+    <div
+      class="tile-face tile-top"
+    />
+    <div
+      class="tile-face tile-right"
+    />
+  </div>
+</div>
+`;
+
+exports[`TileDisplay VRT > honor tile Green (發) structure 1`] = `
+<div
+  class="tile-3d-container text-sm"
+  data-size="medium"
+  title="Tile ID: 32"
+>
+  <div
+    class="tile-3d text-sm depth-12"
+  >
+    <div
+      class="tile-face tile-front"
+    >
+      <div
+        class="tile-surface border border-gray-400 rounded bg-white flex items-center justify-center"
+        data-size="medium"
+      >
+        <div
+          class="tile-honor bg-white text-green-600"
+        >
+          發
+        </div>
+      </div>
+    </div>
+    <div
+      class="tile-face tile-top"
+    />
+    <div
+      class="tile-face tile-right"
+    />
+  </div>
+</div>
+`;
+
+exports[`TileDisplay VRT > honor tile Red (中) structure 1`] = `
+<div
+  class="tile-3d-container text-sm"
+  data-size="medium"
+  title="Tile ID: 33"
+>
+  <div
+    class="tile-3d text-sm depth-12"
+  >
+    <div
+      class="tile-face tile-front"
+    >
+      <div
+        class="tile-surface border border-gray-400 rounded bg-white flex items-center justify-center"
+        data-size="medium"
+      >
+        <div
+          class="tile-honor bg-white text-red-600"
+        >
+          中
+        </div>
+      </div>
+    </div>
+    <div
+      class="tile-face tile-top"
+    />
+    <div
+      class="tile-face tile-right"
+    />
+  </div>
+</div>
+`;
+
+exports[`TileDisplay VRT > honor tile White (白) structure 1`] = `
+<div
+  class="tile-3d-container text-sm"
+  data-size="medium"
+  title="Tile ID: 31"
+>
+  <div
+    class="tile-3d text-sm depth-12"
+  >
+    <div
+      class="tile-face tile-front"
+    >
+      <div
+        class="tile-surface border border-gray-400 rounded bg-white flex items-center justify-center"
+        data-size="medium"
+      >
+        <div
+          class="tile-honor bg-white text-white"
+        >
+          白
+        </div>
+      </div>
+    </div>
+    <div
+      class="tile-face tile-top"
+    />
+    <div
+      class="tile-face tile-right"
+    />
+  </div>
+</div>
+`;
+
+exports[`TileDisplay VRT > manzu tile structure 1`] = `
+<div
+  class="tile-3d-container text-sm"
+  data-size="medium"
+  title="Tile ID: 0"
+>
+  <div
+    class="tile-3d text-sm depth-12"
+  >
+    <div
+      class="tile-face tile-front"
+    >
+      <div
+        class="tile-surface border border-gray-400 rounded bg-white flex items-center justify-center"
+        data-size="medium"
+      >
+        <div
+          class="tile-manzu"
+        >
+          <div
+            class="tile-number tile-number-black"
+          >
+            一
+          </div>
+          <div
+            class="tile-suit tile-suit-red"
+          >
+            萬
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="tile-face tile-top"
+    />
+    <div
+      class="tile-face tile-right"
+    />
+  </div>
+</div>
+`;
+
+exports[`TileDisplay VRT > pinzu one tile structure 1`] = `
+<div
+  class="tile-3d-container text-sm"
+  data-size="medium"
+  title="Tile ID: 9"
+>
+  <div
+    class="tile-3d text-sm depth-12"
+  >
+    <div
+      class="tile-face tile-front"
+    >
+      <div
+        class="tile-surface border border-gray-400 rounded bg-white flex items-center justify-center"
+        data-size="medium"
+      >
+        <div
+          class="tile-pinzu"
+        >
+          <div
+            class="tile-pinzu-special-one"
+          >
+            <div
+              class="pinzu-one-outer"
+            />
+            <div
+              class="pinzu-one-inner"
+            />
+            <div
+              class="pinzu-one-center"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="tile-face tile-top"
+    />
+    <div
+      class="tile-face tile-right"
+    />
+  </div>
+</div>
+`;
+
+exports[`TileDisplay VRT > souzu one tile structure 1`] = `
+<div
+  class="tile-3d-container text-sm"
+  data-size="medium"
+  title="Tile ID: 18"
+>
+  <div
+    class="tile-3d text-sm depth-12"
+  >
+    <div
+      class="tile-face tile-front"
+    >
+      <div
+        class="tile-surface border border-gray-400 rounded bg-white flex items-center justify-center"
+        data-size="medium"
+      >
+        <div
+          class="tile-souzu"
+        >
+          <div
+            class="tile-souzu-peacock"
+          >
+            <div
+              class="peacock-body"
+            />
+            <div
+              class="peacock-head"
+            />
+            <div
+              class="peacock-beak"
+            />
+            <div
+              class="peacock-feet"
+            />
+            <div
+              class="peacock-tail"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="tile-face tile-top"
+    />
+    <div
+      class="tile-face tile-right"
+    />
+  </div>
+</div>
+`;

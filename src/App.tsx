@@ -1,66 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from "preact/hooks";
-import { invoke } from "@tauri-apps/api/core";
 import { GameState } from "./types";
+import { safeInvoke } from "./lib/tauri";
 import { HandDisplay } from "./components/HandDisplay";
 import { DiscardDisplay } from "./components/DiscardDisplay";
 import { DebugPanel } from "./components/DebugPanel";
 import { GameEndModal } from "./components/GameEndModal";
-
-// Check if Tauri is available
-// Debug: Log window object to see what Tauri properties are available
-function isTauriAvailable(): boolean {
-  if (typeof window === "undefined") {
-    return false;
-  }
-  
-  // Check both __TAURI__ (Tauri 1.x) and __TAURI_INTERNALS__ (Tauri 2.x)
-  const hasTauri1 = "__TAURI__" in window;
-  const hasTauri2 = "__TAURI_INTERNALS__" in window;
-  
-  // Debug: Log window object to console
-  // To debug, uncomment the following lines and check the browser console:
-  console.log("Tauri debug - window keys with TAURI:", Object.keys(window).filter(k => k.includes("TAURI")));
-  console.log("Tauri debug - __TAURI__:", hasTauri1);
-  console.log("Tauri debug - __TAURI_INTERNALS__:", hasTauri2);
-  if (hasTauri1) {
-    console.log("Tauri debug - window.__TAURI__:", (window as any).__TAURI__);
-  }
-  if (hasTauri2) {
-    console.log("Tauri debug - window.__TAURI_INTERNALS__:", (window as any).__TAURI_INTERNALS__);
-  }
-  
-  // Tauri 2.x uses __TAURI_INTERNALS__ instead of __TAURI__
-  // Check both for compatibility
-  return hasTauri1 || hasTauri2;
-}
-
-// Wrapper for Tauri invoke with availability check and error handling
-async function safeInvoke<T>(
-  command: string,
-  args?: Record<string, unknown>,
-  options?: { showAlert?: boolean; onError?: (error: unknown) => void }
-): Promise<T | null> {
-  if (!isTauriAvailable()) {
-    const message = "Tauri is not available. Please run this app in Tauri.";
-    if (options?.showAlert !== false) {
-      alert(message);
-    }
-    console.error(message);
-    return null;
-  }
-
-  try {
-    return await invoke<T>(command, args);
-  } catch (error) {
-    console.error(`Failed to invoke ${command}:`, error);
-    if (options?.onError) {
-      options.onError(error);
-    } else if (options?.showAlert !== false) {
-      alert(`Failed to ${command}: ${error}`);
-    }
-    return null;
-  }
-}
 
 export function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);

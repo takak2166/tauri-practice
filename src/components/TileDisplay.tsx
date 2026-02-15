@@ -1,4 +1,5 @@
 import { Tile } from "../types";
+import { getTileContent } from "../lib/tileContent";
 
 interface TileDisplayProps {
   tile: Tile;
@@ -19,23 +20,6 @@ export function TileDisplay({ tile, size = "medium", hidden = false }: TileDispl
     medium: "depth-12",
     large: "depth-16",
   }[size];
-
-  const getTileContent = (id: number): { type: "manzu" | "pinzu" | "souzu" | "honor"; number?: number; honor?: string } => {
-    if (id >= 0 && id <= 8) {
-      // Manzu: 1-9萬
-      return { type: "manzu", number: id + 1 };
-    } else if (id >= 9 && id <= 17) {
-      // Pinzu: 1-9筒
-      return { type: "pinzu", number: id - 8 };
-    } else if (id >= 18 && id <= 26) {
-      // Souzu: 1-9索
-      return { type: "souzu", number: id - 17 };
-    } else {
-      // Honors: 27=East, 28=South, 29=West, 30=North, 31=White, 32=Green, 33=Red
-      const honors = ["東", "南", "西", "北", "白", "發", "中"];
-      return { type: "honor", honor: honors[id - 27] || "?" };
-    }
-  };
 
   const renderTileContent = () => {
     const content = getTileContent(tile.id);

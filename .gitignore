@@ -26,3 +26,13 @@ dist-ssr
 # Tauri
 src-tauri/target
 
+# Vitest visual testing (vitest-plugin-vis)
+**/__vis__/**/__diffs__
+**/__vis__/**/__results__
+**/__vis__/local
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
